@@ -60,4 +60,4 @@ Some of the defaults can be modified by changing environment variables.
 
 #### Copy to Clipboard
 
-[genpass](https://github.com/seanbreckenridge/dotfiles/blob/master/zsh/functions/genpass) is a function which copies this to your clipboard. It uses [clipcopy](https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/clipboard.zsh), which is installed by oh-my-zsh, but if you don't have that you could use the underlying [pbcopy](https://ss64.com/osx/pbcopy.html)/[xclip](https://linux.die.net/man/1/xclip)
+[genpass](https://github.com/seanbreckenridge/dotfiles/blob/master/zsh/functions/genpass) is a zsh function which copies this to your clipboard. It uses [clipcopy](https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/clipboard.zsh), which is installed by oh-my-zsh, but if you don't have that you could use the underlying [pbcopy](https://ss64.com/osx/pbcopy.html)/[xclip](https://linux.die.net/man/1/xclip)
