@@ -1,0 +1,59 @@
+
+# genpasswd
+
+Yet another Password Generator.
+
+Mostly written to un-rust my C++, but I do use this whenever I need a password.
+
+### Usage:
+
+```
+
+Yet another Password Generator
+
+usage:
+   genpasswd
+   genpasswd PASSWD_LENGTH
+   genpasswd [-n PASSWD_LENGTH] [-r CHARACTER_SET] [-c COUNT] [-p|-s]
+
+options:
+   -n N     length of password to generate
+   -c C     number of passwords to generate
+   -r R     character set to remove from allowed characters
+   -p       shorthand for -n 4 -r lower -r upper -r sym
+            to generate a string of random numbers of length 4
+            meant to be used for bank pins
+   -s       shorthand for -n 16 -r sym
+            meant for websites which have strict limits on passwords
+
+character sets:
+   lowercase   : l, lower, lowercase
+   uppercase   : u, upper, uppercase
+   numbers     : n, num, number, numbers
+   symbols     : s, sym, symbol, symbols
+
+examples:
+   genpasswd 40              : password of length 40
+   genpasswd -n 30 -r s      : password of length 30 without symbols
+   genpasswd -p              : generate a bank pin
+```
+
+### Install:
+
+```
+git clone https://github.com/seanbreckenridge/genpasswd
+cd genpasswd
+make
+./genpasswd
+# put the generated genpasswd binary on your $PATH somewhere
+cp genpasswd /usr/local/bin/
+```
+
+#### Environment Variables
+
+Some of the defaults can be modified by changing environment variables.
+
+`GENPASSWD_LENGTH`: default password length, defaults to 20
+`GENPASSWD_SIMPLE_LENGTH`: defaults simple (-s) password length, defaults to 16
+`GENPASSWD_PIN_LENGTH`: default pin (-p) password length, defaults to 4
+`GENPASSWD_COUNT`: default password count (-c), defaults to 1

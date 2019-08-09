@@ -1,0 +1,63 @@
+# Project
+
+genpasswd
+
+# Mac
+
+.DS_Store
+.DS_Store?
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+# Windows
+
+Thumbs.db
+Desktop.ini
+
+# Emacs
+
+*~
+\#*\#
+.\#*
+
+
+
+# Created by https://www.gitignore.io/api/c++
+# Edit at https://www.gitignore.io/?templates=c++
+
+### C++ ###
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# End of https://www.gitignore.io/api/c++
