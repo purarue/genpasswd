@@ -53,7 +53,11 @@ cp genpasswd /usr/local/bin/
 
 Some of the defaults can be modified by changing environment variables.
 
-`GENPASSWD_LENGTH`: default password length, defaults to 20
-`GENPASSWD_SIMPLE_LENGTH`: defaults simple (-s) password length, defaults to 16
-`GENPASSWD_PIN_LENGTH`: default pin (-p) password length, defaults to 4
-`GENPASSWD_COUNT`: default password count (-c), defaults to 1
+* `GENPASSWD_LENGTH`: default password length, defaults to 20
+* `GENPASSWD_SIMPLE_LENGTH`: defaults simple (-s) password length, defaults to 16
+* `GENPASSWD_PIN_LENGTH`: default pin (-p) password length, defaults to 4
+* `GENPASSWD_COUNT`: default password count (-c), defaults to 1
+
+#### Copy to Clipboard
+
+[genpass](https://github.com/seanbreckenridge/dotfiles/blob/master/zsh/functions/genpass) is a function which copies this to your clipboard. It uses [clipcopy](https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/clipboard.zsh), which is installed by oh-my-zsh, but if you don't have that you could use the underlying [pbcopy](https://ss64.com/osx/pbcopy.html)/[xclip](https://linux.die.net/man/1/xclip)
