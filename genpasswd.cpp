@@ -1,16 +1,14 @@
 #include "genpasswd.h"
-#include <algorithm>  // any_of
 #include <cctype>     // tolower
 #include <cstdlib>    // getenv, exit, srand, rand
+#include <cstring>    // strncat
 #include <iostream>   // cout, cerr, endl
-#include <limits>     // numeric_limits
 #include <optional>   // optional
-#include <sstream>    // stringstream
 #include <string>     // string
 #include <sys/time.h> // gettimeofday
 #include <unistd.h>   // getopt
 
-const char *usage_str =
+const char* usage_str =
     "Yet another Password Generator\n\n"
     "usage:\n"
     "   genpasswd\n"
@@ -32,20 +30,22 @@ const char *usage_str =
     "   symbols     : s, sym, symbol, symbols\n\n"
     "examples:\n"
     "   genpasswd 40              : password of length 40\n"
-    "   genpasswd -n 30 -r s      : password of length 30 without symbols\n"
-    "   genpasswd -p              : generate a bank pin\n";
+    "   genpasswd -n 30 -rsym     : password of length 30 without symbols\n"
+    "   genpasswd -p              : generate a bank pin\n\n"
+    "Type genpasswd -h for help";
 
 
-int get_env_or(const std::string &envvar, int def_val) {
-  if (const char *def_val_str = std::getenv(envvar.c_str())) { // if environment variable exists
+int get_env_or(const std::string& envvar, const int def_val) {
+  if (const char* def_val_str = std::getenv(envvar.c_str())) { // if environment variable exists
     try {
       if (const int parsed_int = std::stoi(def_val_str)) {
         if (parsed_int > 0) {
-          def_val = parsed_int;
+          return parsed_int;
         }
       }
     } catch (...) {
-      fprintf(stderr, "Error converting '%s' to an integer, using default: %d\n", def_val_str, def_val);
+      fprintf(stderr, "Error converting '%s' to an integer, using default: %d\n",
+              def_val_str, def_val);
     }
   }
   return def_val;
@@ -56,7 +56,7 @@ int get_env_or(const std::string &envvar, int def_val) {
  * Does nothing if parsing fails
  * Checks to make sure int isn't negative, to validate unsigned int
  */
-void parse_int(std::optional<unsigned int> &length_arg, const char *s) {
+void parse_int(std::optional<unsigned int>& length_arg, const char* s) {
   try {
     if (const int parsed_int = std::stoi(s)) {
       if (parsed_int > 0) {
@@ -71,33 +71,109 @@ void parse_int(std::optional<unsigned int> &length_arg, const char *s) {
 
 /*
  * Each is 26 characters long to attempt to get equal distribution
+ * Could have easily been done with a stringstream, but
+ * since theres only 15 possiblities, hardcoded the bool tree
+ * domain has length of 105
  */
-std::string generate_domain(const bool *allowed_character_sets) {
-  std::stringstream ss;
-  if (allowed_character_sets[0]) {
-    ss << "abcdefghijklmnopqrstuvwxyz";
+void generate_domain(const bool* allowed_character_sets, char* domain) {
+  if (allowed_character_sets[0]) { // 1
+    if (allowed_character_sets[1]) { // 1, 1
+      if (allowed_character_sets[2]) { // 1, 1, 1
+        if (allowed_character_sets[3]) { // 1, 1, 1, 1
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
+                  104);
+        } else { // 1, 1, 1, 0
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685",
+                  78);
+        }
+      } else { // 1, 1, 0
+        if (allowed_character_sets[3]) { // 1, 1, 0, 1
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&()*+,-./<=>?@[]^_`{}~",
+                  78);
+        } else { // 1, 1, 0, 0
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                  52);
+        }
+      }
+    } else { // 1, 0
+      if (allowed_character_sets[2]) { // 1, 0, 1
+        if (allowed_character_sets[3]) { // 1, 0, 1, 1
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyz00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
+                  78);
+        } else { // 1, 0, 1, 0
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyz00123456789012345678924685",
+                  52);
+        }
+      } else { // 1, 0, 0
+        if (allowed_character_sets[3]) { // 1, 0, 0, 1
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyz!#$%&()*+,-./<=>?@[]^_`{}~",
+                  52);
+        } else { // 1, 0, 0, 0
+          strncpy(domain,
+                  "abcdefghijklmnopqrstuvwxyz",
+                  26);
+        }
+      }
+    }
+  } else { // 0
+    if (allowed_character_sets[1]) { // 0, 1
+      if (allowed_character_sets[2]) { // 0, 1, 1
+        if (allowed_character_sets[3]) { // 0, 1, 1, 1
+          strncpy(domain,
+                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
+                  78);
+        } else { // 0, 1, 1, 0
+          strncpy(domain,
+                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685",
+                  52);
+        }
+      } else { // 0, 1, 0
+        if (allowed_character_sets[3]) { // 0, 1, 0, 1
+          strncpy(domain,
+                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&()*+,-./<=>?@[]^_`{}~",
+                  52);
+        } else { // 0, 1, 0, 0
+          strncpy(domain,
+                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                  26);
+        }
+      }
+    } else { // 0, 0
+      if (allowed_character_sets[2]) { // 0, 0, 1
+        if (allowed_character_sets[3]) { // 0, 0, 1, 1
+          strncpy(domain,
+                  "00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
+                  52);
+        } else { // 0, 0, 1, 0
+          strncpy(domain,
+                  "00123456789012345678924685",
+                  26);
+        }
+      } else { // 0, 0, 0 -> 0, 0, 0, 1
+        // 0, 0, 0, 0 is not allowed so the allowed_character_sets[3] check isn't needed
+        strncpy(domain,
+                "!#$%&()*+,-./<=>?@[]^_`{}~",
+                26);
+      }
+    }
   }
-  if (allowed_character_sets[1]) {
-    ss << "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  }
-  if (allowed_character_sets[2]) {
-    ss << "0123456789012345678924685";
-  }
-  if (allowed_character_sets[3]) {
-    ss << "!#$%&()*+,-./<=>?@[]^_`{}~";
-  }
-  return ss.str();
 }
 
 /**
  * Sets 'pw' to a password of length 'n', randomly picking from 'domain'
  * uses rand() seeded with the current time in ms
  */
-void generate_password(char *pw, const std::string &domain,
-                       unsigned int length) {
-  int domain_length = domain.length();
+void generate_password(char* pw, const char* domain,
+                       const int domain_length, const unsigned int length) {
   for (unsigned int i = 0; i < length; i++) {
-    pw[i] = domain.at(rand() % domain_length);
+    pw[i] = domain[rand() % domain_length];
   }
 }
 
@@ -111,18 +187,20 @@ int main(int argc, char *argv[]) {
   timeval t1;
   gettimeofday(&t1, NULL);
   srand(t1.tv_usec * t1.tv_sec);
+
   std::optional<unsigned int> length_arg; // length from user
   std::optional<unsigned int> count_arg;  // count from user
-  int opt;                                // getopt opt
-  char fc; // first character, used to parse -r CHARACTER_SET
+
   // lowercase, uppercase, numbers, symbols
   bool allowed_character_sets[4] = {true, true, true, true};
 
   unsigned int default_passwd_length = get_env_or("GENPASSWD_LENGTH", 20);
-  unsigned int default_simple_length =
-      get_env_or("GENPASSWD_SIMPLE_LENGTH", 16);
+  unsigned int default_simple_length = get_env_or("GENPASSWD_SIMPLE_LENGTH", 16);
   unsigned int default_pin_length = get_env_or("GENPASSWD_PIN_LENGTH", 4);
   unsigned int default_count = get_env_or("GENPASSWD_COUNT", 1);
+
+  char fc; // first character, used to parse -r CHARACTER_SET
+  int opt; // getopt opt
 
   // parse command line args
   while ((opt = getopt(argc, argv, ":n:c:r:ps")) != -1) {
@@ -174,7 +252,7 @@ int main(int argc, char *argv[]) {
   }
 
   // check for length as a positional argument
-  // only set if user didn't already set the with the -n flag
+  // only set if user didn't already set the with the -n/-p/-s flag
   if (argc - optind > 0 && !length_arg) {
     parse_int(length_arg, argv[optind]);
   }
@@ -184,27 +262,31 @@ int main(int argc, char *argv[]) {
   unsigned int count = (count_arg) ? *count_arg : default_count;
 
   // make sure at least one character set exists
-  bool character_set_exists = false;
+  int character_sets = 0;
   for (int i = 0; i < 4; i++) {
     if (allowed_character_sets[i]) {
-      character_set_exists = true;
-      break;
+      character_sets++;
+      // dont break so we can use the domain length later in generate_password
     }
   }
-  if (!character_set_exists) {
+  int domain_length = character_sets * 26;
+  if (character_sets == 0) {
     std::cerr << "At least one character set must exist." << std::endl;
     exit(1);
   }
 
   // generate domain
-  std::string domain = generate_domain(allowed_character_sets);
+  char* domain = new char[domain_length + 1];
+  generate_domain(allowed_character_sets, domain);
 
   // generate password
-  char *pw = new char[length + 1](); // null terminate
+  char *pw = new char[length + 1];
+  pw[length] = '\0'; // null terminate
   for (unsigned int c = 0; c < count; c++) {
-    generate_password(pw, domain, length);
+    generate_password(pw, domain, domain_length, length);
     std::cout << pw << std::endl;
   }
+  delete[] domain;
   delete[] pw;
   return 0;
 }

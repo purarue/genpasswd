@@ -8,7 +8,6 @@ Mostly written to un-rust my C++, but I do use this whenever I need a password.
 ### Usage:
 
 ```
-
 Yet another Password Generator
 
 usage:
@@ -34,8 +33,10 @@ character sets:
 
 examples:
    genpasswd 40              : password of length 40
-   genpasswd -n 30 -r s      : password of length 30 without symbols
+   genpasswd -n 30 -rsym     : password of length 30 without symbols
    genpasswd -p              : generate a bank pin
+
+Type genpasswd -h for help
 ```
 
 ### Install:
