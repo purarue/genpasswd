@@ -1,4 +1,3 @@
-#include "genpasswd.h"
 #include <cctype>     // tolower
 #include <cstdlib>    // getenv, exit, srand, rand
 #include <cstring>    // strncat
@@ -34,7 +33,10 @@ const char* usage_str =
     "   genpasswd -p              : generate a bank pin\n\n"
     "Type genpasswd -h for help";
 
-
+/**
+ * Gets the environment variable 'envvar' as an integer
+ * or defaults to 'def_val'
+ */
 int get_env_or(const std::string& envvar, const int def_val) {
   if (const char* def_val_str = std::getenv(envvar.c_str())) { // if environment variable exists
     try {
@@ -70,6 +72,8 @@ void parse_int(std::optional<unsigned int>& length_arg, const char* s) {
 
 
 /*
+ * Given the allowed_character_sets array (bool[4]),
+ * returns the allowed character domain
  * Each is 26 characters long to attempt to get equal distribution
  * Could have easily been done with a stringstream, but
  * since theres only 15 possiblities, hardcoded the bool tree
