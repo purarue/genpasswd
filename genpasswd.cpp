@@ -1,9 +1,10 @@
 #include <cctype>     // tolower
 #include <cstdlib>    // getenv, exit, srand, rand
-#include <cstring>    // strncat
 #include <iostream>   // cout, cerr, endl
 #include <optional>   // optional
 #include <string>     // string
+#include <string.h>   // strcpy
+#include <sstream>    // stringstream
 #include <sys/time.h> // gettimeofday
 #include <unistd.h>   // getopt
 
@@ -31,7 +32,7 @@ const char* usage_str =
     "   genpasswd 40              : password of length 40\n"
     "   genpasswd -n 30 -rsym     : password of length 30 without symbols\n"
     "   genpasswd -p              : generate a bank pin\n\n"
-    "Type genpasswd -h for help";
+    "Type genpasswd -h for help\n";
 
 /**
  * Gets the environment variable 'envvar' as an integer
@@ -75,99 +76,24 @@ void parse_int(std::optional<unsigned int>& length_arg, const char* s) {
  * Given the allowed_character_sets array (bool[4]),
  * returns the allowed character domain
  * Each is 26 characters long to attempt to get equal distribution
- * Could have easily been done with a stringstream, but
- * since theres only 15 possiblities, hardcoded the bool tree
- * domain has length of 105
  */
-void generate_domain(const bool* allowed_character_sets, char* domain) {
-  if (allowed_character_sets[0]) { // 1
-    if (allowed_character_sets[1]) { // 1, 1
-      if (allowed_character_sets[2]) { // 1, 1, 1
-        if (allowed_character_sets[3]) { // 1, 1, 1, 1
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
-                  104);
-        } else { // 1, 1, 1, 0
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685",
-                  78);
-        }
-      } else { // 1, 1, 0
-        if (allowed_character_sets[3]) { // 1, 1, 0, 1
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&()*+,-./<=>?@[]^_`{}~",
-                  78);
-        } else { // 1, 1, 0, 0
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                  52);
-        }
-      }
-    } else { // 1, 0
-      if (allowed_character_sets[2]) { // 1, 0, 1
-        if (allowed_character_sets[3]) { // 1, 0, 1, 1
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyz00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
-                  78);
-        } else { // 1, 0, 1, 0
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyz00123456789012345678924685",
-                  52);
-        }
-      } else { // 1, 0, 0
-        if (allowed_character_sets[3]) { // 1, 0, 0, 1
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyz!#$%&()*+,-./<=>?@[]^_`{}~",
-                  52);
-        } else { // 1, 0, 0, 0
-          strncpy(domain,
-                  "abcdefghijklmnopqrstuvwxyz",
-                  26);
-        }
-      }
-    }
-  } else { // 0
-    if (allowed_character_sets[1]) { // 0, 1
-      if (allowed_character_sets[2]) { // 0, 1, 1
-        if (allowed_character_sets[3]) { // 0, 1, 1, 1
-          strncpy(domain,
-                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
-                  78);
-        } else { // 0, 1, 1, 0
-          strncpy(domain,
-                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ00123456789012345678924685",
-                  52);
-        }
-      } else { // 0, 1, 0
-        if (allowed_character_sets[3]) { // 0, 1, 0, 1
-          strncpy(domain,
-                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&()*+,-./<=>?@[]^_`{}~",
-                  52);
-        } else { // 0, 1, 0, 0
-          strncpy(domain,
-                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                  26);
-        }
-      }
-    } else { // 0, 0
-      if (allowed_character_sets[2]) { // 0, 0, 1
-        if (allowed_character_sets[3]) { // 0, 0, 1, 1
-          strncpy(domain,
-                  "00123456789012345678924685!#$%&()*+,-./<=>?@[]^_`{}~",
-                  52);
-        } else { // 0, 0, 1, 0
-          strncpy(domain,
-                  "00123456789012345678924685",
-                  26);
-        }
-      } else { // 0, 0, 0 -> 0, 0, 0, 1
-        // 0, 0, 0, 0 is not allowed so the allowed_character_sets[3] check isn't needed
-        strncpy(domain,
-                "!#$%&()*+,-./<=>?@[]^_`{}~",
-                26);
-      }
-    }
+char* generate_domain(const bool* allowed_character_sets) {
+  std::stringstream ss;
+  if (allowed_character_sets[0]) {
+    ss << "abcdefghijklmnopqrstuvwxyz";
   }
+  if (allowed_character_sets[1]) {
+    ss << "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  }
+  if (allowed_character_sets[2]) {
+    ss << "00123456789012345678924685";
+  }
+  if (allowed_character_sets[3]) {
+    ss << "!#$%&()*+,-./<=>?@[]^_`{}~";
+  }
+  char *d = new char[ss.str().size() + 1];
+  strcpy(d, ss.str().c_str());
+  return d;
 }
 
 /**
@@ -280,8 +206,7 @@ int main(int argc, char *argv[]) {
   }
 
   // generate domain
-  char* domain = new char[domain_length + 1];
-  generate_domain(allowed_character_sets, domain);
+  char* domain = generate_domain(allowed_character_sets);
 
   // generate password
   char *pw = new char[length + 1];
