@@ -59,7 +59,7 @@ Some of the defaults can be modified by changing environment variables.
 * `GENPASSWD_PIN_LENGTH`: default pin (-p) password length, defaults to 4
 * `GENPASSWD_COUNT`: default password count (-c), defaults to 1
 
-### zsh completion
+#### zsh completion
 
 This adheres to getopts, so you can put this in your zsh config:
 
