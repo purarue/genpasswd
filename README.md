@@ -44,7 +44,8 @@ Type genpasswd -h for help
 ```
 git clone https://gitlab.com/seanbreckenridge/genpasswd
 cd genpasswd
-make install
+make
+sudo make install
 ```
 
 #### Environment Variables
