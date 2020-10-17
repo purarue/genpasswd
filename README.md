@@ -44,10 +44,7 @@ Type genpasswd -h for help
 ```
 git clone https://gitlab.com/seanbreckenridge/genpasswd
 cd genpasswd
-make
-./genpasswd
-# put the generated genpasswd binary on your $PATH somewhere
-cp genpasswd /usr/local/bin/
+make install
 ```
 
 #### Environment Variables
