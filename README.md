@@ -42,7 +42,7 @@ Type genpasswd -h for help
 ### Install:
 
 ```
-git clone https://gitlab.com/seanbreckenridge/genpasswd
+git clone https://github.com/seanbreckenridge/genpasswd
 cd genpasswd
 make
 sudo make install
