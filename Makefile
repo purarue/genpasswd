@@ -7,7 +7,8 @@ OBJECT=genpasswd.o
 all: genpasswd
 
 install: genpasswd
-	sudo cp ./genpasswd /usr/local/bin/
+	mkdir ~/.local/bin/
+	cp ./genpasswd ~/.local/bin/
 
 genpasswd: $(OBJECT)
 	$(CXX) $(OBJECT) -o $(EXECUTABLE_NAME)
