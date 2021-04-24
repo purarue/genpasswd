@@ -7,7 +7,7 @@ OBJECT=genpasswd.o
 all: genpasswd
 
 install: genpasswd
-	mkdir ~/.local/bin/
+	mkdir -p ~/.local/bin/
 	cp ./genpasswd ~/.local/bin/
 
 genpasswd: $(OBJECT)
