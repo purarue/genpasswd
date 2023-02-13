@@ -2,13 +2,13 @@
 #include <cstdlib>    // getenv, exit, srand, rand
 #include <iostream>   // cout, cerr, endl
 #include <optional>   // optional
-#include <string>     // string
-#include <string.h>   // strcpy
 #include <sstream>    // stringstream
+#include <string.h>   // strcpy
+#include <string>     // string
 #include <sys/time.h> // gettimeofday
 #include <unistd.h>   // getopt
 
-const char* usage_str =
+const char *usage_str =
     "Yet another Password Generator\n\n"
     "usage:\n"
     "   genpasswd\n"
@@ -38,8 +38,9 @@ const char* usage_str =
  * Gets the environment variable 'envvar' as an integer
  * or defaults to 'def_val'
  */
-int get_env_or(const std::string& envvar, const int def_val) {
-  if (const char* def_val_str = std::getenv(envvar.c_str())) { // if environment variable exists
+int get_env_or(const std::string &envvar, const int def_val) {
+  if (const char *def_val_str =
+          std::getenv(envvar.c_str())) { // if environment variable exists
     try {
       if (const int parsed_int = std::stoi(def_val_str)) {
         if (parsed_int > 0) {
@@ -47,7 +48,8 @@ int get_env_or(const std::string& envvar, const int def_val) {
         }
       }
     } catch (...) {
-      fprintf(stderr, "Error converting '%s' to an integer, using default: %d\n",
+      fprintf(stderr,
+              "Error converting '%s' to an integer, using default: %d\n",
               def_val_str, def_val);
     }
   }
@@ -59,7 +61,7 @@ int get_env_or(const std::string& envvar, const int def_val) {
  * Does nothing if parsing fails
  * Checks to make sure int isn't negative, to validate unsigned int
  */
-void parse_int(std::optional<unsigned int>& length_arg, const char* s) {
+void parse_int(std::optional<unsigned int> &length_arg, const char *s) {
   try {
     if (const int parsed_int = std::stoi(s)) {
       if (parsed_int > 0) {
@@ -71,13 +73,12 @@ void parse_int(std::optional<unsigned int>& length_arg, const char* s) {
   }
 }
 
-
 /*
  * Given the allowed_character_sets array (bool[4]),
  * returns the allowed character domain
  * Each is 26 characters long to attempt to get equal distribution
  */
-char* generate_domain(const bool* allowed_character_sets) {
+char *generate_domain(const bool *allowed_character_sets) {
   std::stringstream ss;
   if (allowed_character_sets[0]) {
     ss << "abcdefghijklmnopqrstuvwxyz";
@@ -100,8 +101,8 @@ char* generate_domain(const bool* allowed_character_sets) {
  * Sets 'pw' to a password of length 'n', randomly picking from 'domain'
  * uses rand() seeded with the current time in ms
  */
-void generate_password(char* pw, const char* domain,
-                       const int domain_length, const unsigned int length) {
+void generate_password(char *pw, const char *domain, const int domain_length,
+                       const unsigned int length) {
   for (unsigned int i = 0; i < length; i++) {
     pw[i] = domain[rand() % domain_length];
   }
@@ -125,7 +126,8 @@ int main(int argc, char *argv[]) {
   bool allowed_character_sets[4] = {true, true, true, true};
 
   unsigned int default_passwd_length = get_env_or("GENPASSWD_LENGTH", 20);
-  unsigned int default_simple_length = get_env_or("GENPASSWD_SIMPLE_LENGTH", 16);
+  unsigned int default_simple_length =
+      get_env_or("GENPASSWD_SIMPLE_LENGTH", 16);
   unsigned int default_pin_length = get_env_or("GENPASSWD_PIN_LENGTH", 4);
   unsigned int default_count = get_env_or("GENPASSWD_COUNT", 1);
 
@@ -206,7 +208,7 @@ int main(int argc, char *argv[]) {
   }
 
   // generate domain
-  char* domain = generate_domain(allowed_character_sets);
+  char *domain = generate_domain(allowed_character_sets);
 
   // generate password
   char *pw = new char[length + 1];
