@@ -1,14 +1,12 @@
 # genpasswd
 
-Yet another Password Generator.
+A password generator with defaults and some shorthands that I like
 
-Mostly written to un-rust my C++, but I do use this whenever I need a password.
+Mostly written to un-rust my C++ (heh...), but I do use this whenever I need a password
 
 ### Usage:
 
 ```
-Yet another Password Generator
-
 usage:
    genpasswd
    genpasswd PASSWD_LENGTH

@@ -9,7 +9,6 @@
 #include <unistd.h>   // getopt
 
 const char *usage_str =
-    "Yet another Password Generator\n\n"
     "usage:\n"
     "   genpasswd\n"
     "   genpasswd PASSWD_LENGTH\n"
