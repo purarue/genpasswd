@@ -39,7 +39,7 @@ Type genpasswd -h for help
 ### Install:
 
 ```
-git clone https://github.com/seanbreckenridge/genpasswd
+git clone https://github.com/purarue/genpasswd
 cd genpasswd
 make
 make install
