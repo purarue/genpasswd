@@ -77,7 +77,7 @@ genpasswd -
 
 #### Copy to Clipboard
 
-I wrap this in a bash script [here](https://sean.fish/d/genpass?dark) that copies the password to my clipboard. That looks something like:
+I wrap this in a bash script [here](https://purarue.xyz/d/genpass?dark) that copies the password to my clipboard. That looks something like:
 
 ```
 #!/usr/bin/env bash
