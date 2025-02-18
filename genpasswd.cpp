@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
   // lowercase, uppercase, numbers, symbols
   bool allowed_character_sets[4] = {true, true, true, true};
 
-  unsigned int default_passwd_length = get_env_or("GENPASSWD_LENGTH", 20);
+  unsigned int default_passwd_length = get_env_or("GENPASSWD_LENGTH", 32);
   unsigned int default_simple_length =
       get_env_or("GENPASSWD_SIMPLE_LENGTH", 16);
   unsigned int default_pin_length = get_env_or("GENPASSWD_PIN_LENGTH", 4);
