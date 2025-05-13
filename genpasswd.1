@@ -1,0 +1,59 @@
+.TH GENPASSWD 1 2025-05-13
+.SH NAME
+genpasswd \- generate secure random passwords
+.SH SYNOPSIS
+.B genpasswd
+[\fIPASSWD_LENGTH\fR]
+[\fB\-n\fR \fILENGTH\fR]
+[\fB\-r\fR \fICHARACTER_SET\fR]
+[\fB\-c\fR \fICOUNT\fR]
+[\fB\-p\fR]
+[\fB\-s\fR]
+.SH DESCRIPTION
+.B genpasswd
+generates secure random passwords, allowing you to customize length and character sets.
+.TP
+Default behavior generates a password of length 32 using all character sets.
+.SH OPTIONS
+.TP
+.BR \-n " LENGTH"
+set the length of the password (overrides positional argument)
+.TP
+.BR \-c " COUNT"
+generate multiple passwords
+.TP
+.BR \-r " CHARACTER_SET"
+remove a character set from allowed characters. Can be used multiple times.
+.TP
+.B \-p
+shorthand for \fB-n 4 -r lower -r upper -r sym\fR. Generates a 4-digit numeric PIN.
+.TP
+.B \-s
+shorthand for \fB-n 16 -r sym\fR. Generates a 16-character password with no symbols.
+.SH CHARACTER SETS
+.TP
+.BR l ", " lower ", " lowercase
+lowercase letters (a-z)
+.TP
+.BR u ", " upper ", " uppercase
+uppercase letters (A-Z)
+.TP
+.BR n ", " num ", " number ", " numbers
+numbers (0-9)
+.TP
+.BR s ", " sym ", " symbol ", " symbols
+symbols (e.g., !@#$%^&)
+.SH EXAMPLES
+.TP
+.B genpasswd 40
+generate a password of length 40
+.TP
+.B genpasswd -n 30 -r sym
+generate a password of length 30 without symbols
+.TP
+.B genpasswd -p
+generate a 4-digit numeric bank PIN
+.SH AUTHOR
+Written by purarue
+.SH SEE ALSO
+Source code available at <https://github.com/purarue/genpasswd>
