@@ -8,6 +8,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
 
 set(SOURCE genpasswd.cpp)
 
+if(NOT PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
+  file(GENERATE OUTPUT .gitignore CONTENT "*")
+endif()
+
 set(LOCAL_BIN "$ENV{HOME}/.local/bin")
 set(LOCAL_MAN "$ENV{HOME}/.local/share/man/man1")
 
