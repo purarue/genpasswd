@@ -38,9 +38,13 @@ Type genpasswd -h for help
 
 ### Install:
 
+Requires `make` and [`cmake`](https://cmake.org/)
+
 ```
 git clone https://github.com/purarue/genpasswd
 cd genpasswd
+cmake -S . -B ./build
+cd ./build
 make
 make install
 ```
